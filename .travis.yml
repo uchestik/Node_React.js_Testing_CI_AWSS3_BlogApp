@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+  - "8"
+# operating system - linux
+dist: trusty 
+#number of services required - mongo & redis
+services: 
+  - mongodb
+  - redis-server
+#array of env variables
+env:
+  - NODE_ENV=ci PORT=3000
+#direct travis to cashe heavy installations like node_modules
+cache:
+  directories:
+    - node_modules
+    - client/node_modules
+# get project ready in CI virtual machine 
+install:
+  - npm install
+  - npm run build
+# start server and execute some number of tests
+# sleep 3 gives the server time to starts up before testing
+script:
+  - nohup npm run start &
+  - sleep 3
+  - npm run test
